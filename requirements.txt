@@ -1,0 +1,17 @@
+# AI Multi-Agent Development Team - Python Dependencies
+# Version: 3.0
+# Last Updated: 2026-01-15
+
+# Core Framework
+crewai>=1.8.0
+crewai-tools>=0.1.0
+
+# AI Model Integration
+anthropic>=0.71.0
+langchain-anthropic>=0.1.0
+
+# Optional: Enhanced Features
+# langchain>=0.1.0              # For additional LangChain features
+# streamlit>=1.29.0             # For performance dashboard
+# pydantic>=2.5.0               # For data validation
+# pyyaml>=6.0                   # For YAML configuration parsing

@@ -1,0 +1,488 @@
+# AI多智能体开发团队配置 v3.0
+# 基于 CrewAI + n-skills + MCP 技术栈
+# 最后更新: 2026-01-15
+
+meta:
+  version: "3.0"
+  framework: "CrewAI v1.8.1"
+  base_model: "claude-3-5-sonnet-20241022"
+  deployment_mode: "production"
+  auto_load: true
+
+# 团队基础配置
+crew:
+  name: "AI精英开发团队"
+  description: "全栈Web应用开发多智能体团队，基于CrewAI编排"
+  process_type: "hierarchical"  # sequential | hierarchical
+  manager_llm: "claude-3-5-sonnet-20241022"
+  max_rpm: 100  # 每分钟最大请求数
+  memory: true  # 启用团队记忆
+  cache: true   # 启用缓存
+  embedder:
+    provider: "openai"
+    config:
+      model: "text-embedding-3-small"
+
+# 智能体定义 (基于8大最佳实践)
+agents:
+  # ========== 战略决策层 ==========
+  - id: "cto_agent"
+    role: "首席技术官"
+    goal: "制定技术战略、架构决策、风险评估、最终仲裁"
+    backstory: |
+      拥有15年全栈开发经验，曾在FAANG公司担任技术总监。
+      擅长技术选型、团队管理和架构决策。
+      曾主导过多个百万用户级系统的架构设计。
+    llm: "claude-3-5-sonnet-20241022"
+    tools:
+      - "architecture_analyzer"
+      - "tech_stack_recommender"
+      - "risk_assessor"
+    max_iter: 10
+    max_rpm: 50
+    verbose: true
+    allow_delegation: true  # 可委派任务
+    memory_config:
+      type: "local"  # 最佳实践2: 记忆本地化
+      max_tokens: 300
+      summary_length: 100
+
+  - id: "pd_agent"
+    role: "产品总监"
+    goal: "产品战略、市场分析、需求优先级排序"
+    backstory: |
+      产品管理专家，精通用户研究和市场分析。
+      曾成功孵化3个SaaS产品从0到1。
+    llm: "claude-3-5-sonnet-20241022"
+    tools:
+      - "market_analyzer"
+      - "user_research"
+      - "prd_generator"
+    max_iter: 8
+    verbose: true
+    allow_delegation: false
+    memory_config:
+      type: "local"
+      max_tokens: 250
+
+  # ========== 项目管理层 ==========
+  - id: "pm_agent"
+    role: "敏捷项目经理"
+    goal: "需求拆解、迭代规划、进度跟踪、风险管理"
+    backstory: |
+      PMP和CSM双认证，10年敏捷开发经验。
+      擅长用户故事拆解、团队协调和冲突解决。
+    llm: "claude-3-5-sonnet-20241022"
+    tools:
+      - "story_mapper"
+      - "burndown_generator"
+      - "risk_tracker"
+    max_iter: 12
+    verbose: true
+    allow_delegation: true
+    memory_config:
+      type: "local"
+      max_tokens: 400
+
+  - id: "sm_agent"
+    role: "敏捷教练"
+    goal: "流程优化、团队效能提升、障碍清除"
+    backstory: |
+      Scrum Master，专注于团队效能和流程改进。
+      擅长引导回顾会议和消除团队障碍。
+    llm: "claude-3-5-sonnet-20241022"
+    tools:
+      - "retro_facilitator"
+      - "velocity_analyzer"
+    max_iter: 6
+    verbose: false
+    allow_delegation: false
+    memory_config:
+      type: "local"
+      max_tokens: 200
+
+  # ========== 设计架构层 ==========
+  - id: "arch_agent"
+    role: "系统架构师"
+    goal: "技术选型、架构设计、性能规划、接口规范"
+    backstory: |
+      微服务架构专家，精通云原生技术栈。
+      设计过多个百万用户级分布式系统。
+      注重可扩展性、可维护性和性能优化。
+    llm: "claude-3-5-sonnet-20241022"
+    tools:
+      - "arch_diagram_generator"  # 最佳实践3: 明确工具权限
+      - "api_designer"
+      - "db_schema_designer"
+      - "performance_estimator"
+    max_iter: 15
+    verbose: true
+    allow_delegation: true
+    memory_config:
+      type: "local"
+      max_tokens: 500
+      include_code_context: true
+
+  - id: "ux_agent"
+    role: "UX/UI设计总监"
+    goal: "用户体验设计、交互规范、可访问性保障"
+    backstory: |
+      资深UX设计师，精通用户研究和交互设计。
+      获得过多个设计奖项，注重细节和用户体验。
+    llm: "claude-3-5-sonnet-20241022"
+    tools:
+      - "figma_integration"
+      - "accessibility_checker"
+      - "prototype_builder"
+    max_iter: 8
+    verbose: true
+    allow_delegation: false
+    memory_config:
+      type: "local"
+      max_tokens: 300
+
+  - id: "sec_agent"
+    role: "信息安全专家"
+    goal: "安全架构、威胁建模、合规审计、漏洞管理"
+    backstory: |
+      CISSP和CEH双认证，10年安全从业经验。
+      擅长威胁建模、渗透测试和安全合规。
+    llm: "claude-3-5-sonnet-20241022"
+    tools:
+      - "threat_modeler"
+      - "security_scanner"
+      - "compliance_checker"
+    max_iter: 10
+    verbose: true
+    allow_delegation: false
+    memory_config:
+      type: "local"
+      max_tokens: 400
+
+  # ========== 执行交付层 - 前端组 ==========
+  - id: "fe_lead_agent"
+    role: "前端技术主管"
+    goal: "前端架构、组件库建设、性能优化、技术指导"
+    backstory: |
+      React/Vue双料专家，开源项目核心贡献者。
+      精通现代前端工具链，注重代码质量和用户体验。
+    llm: "claude-3-5-sonnet-20241022"
+    tools:
+      - "component_designer"
+      - "performance_auditor"
+      - "bundle_analyzer"
+    max_iter: 12
+    verbose: true
+    allow_delegation: true
+    memory_config:
+      type: "local"
+      max_tokens: 450
+      include_code_context: true
+
+  - id: "fe_dev_agent"
+    role: "前端开发工程师"
+    goal: "UI组件实现、页面开发、交互逻辑、单元测试"
+    backstory: |
+      3年React开发经验，熟悉TypeScript和现代前端工具链。
+      注重代码质量和细节，追求像素级还原设计稿。
+    llm: "claude-code"  # 使用 Claude Code 执行开发任务
+    tools:
+      - "code_implementer"  # 最佳实践3: 只有 Implementer 可调用 CodeExecutor
+      - "component_tester"
+      - "storybook_generator"
+    max_iter: 15
+    verbose: true
+    allow_delegation: false
+    memory_config:
+      type: "local"
+      max_tokens: 500
+      focus_on_implementation: true
+
+  - id: "fe_perf_agent"
+    role: "前端性能工程师"
+    goal: "性能监控、打包优化、Core Web Vitals提升"
+    backstory: |
+      性能优化专家，精通Lighthouse和Chrome DevTools。
+      擅长发现性能瓶颈并提供优化方案。
+    llm: "claude-3-5-sonnet-20241022"
+    tools:
+      - "lighthouse_runner"
+      - "webpack_optimizer"
+      - "lazy_loading_helper"
+    max_iter: 8
+    verbose: true
+    allow_delegation: false
+    memory_config:
+      type: "local"
+      max_tokens: 300
+
+  # ========== 执行交付层 - 后端组 ==========
+  - id: "be_lead_agent"
+    role: "后端技术主管"
+    goal: "微服务架构、API设计、数据库设计、服务治理"
+    backstory: |
+      Node.js/Python双栈专家，精通高并发系统设计。
+      曾设计过日活千万的微服务架构。
+    llm: "claude-3-5-sonnet-20241022"
+    tools:
+      - "api_generator"
+      - "db_optimizer"
+      - "microservice_designer"
+    max_iter: 12
+    verbose: true
+    allow_delegation: true
+    memory_config:
+      type: "local"
+      max_tokens: 500
+      include_code_context: true
+
+  - id: "be_dev_agent"
+    role: "后端开发工程师"
+    goal: "业务逻辑实现、接口开发、数据库操作、单元测试"
+    backstory: |
+      全栈开发者，熟悉RESTful和GraphQL。
+      注重代码质量和测试覆盖率。
+    llm: "claude-code"
+    tools:
+      - "code_implementer"
+      - "api_tester"
+      - "db_query_builder"
+    max_iter: 15
+    verbose: true
+    allow_delegation: false
+    memory_config:
+      type: "local"
+      max_tokens: 500
+      focus_on_implementation: true
+
+  - id: "dba_agent"
+    role: "数据库管理员"
+    goal: "Schema设计、查询优化、备份恢复、容量规划"
+    backstory: |
+      DBA专家，精通PostgreSQL和MongoDB。
+      擅长性能调优和数据迁移。
+    llm: "claude-3-5-sonnet-20241022"
+    tools:
+      - "schema_designer"
+      - "query_optimizer"
+      - "migration_generator"
+    max_iter: 10
+    verbose: true
+    allow_delegation: false
+    memory_config:
+      type: "local"
+      max_tokens: 400
+
+  - id: "devops_agent"
+    role: "DevOps工程师"
+    goal: "CI/CD建设、容器化部署、监控告警、基础设施即代码"
+    backstory: |
+      K8s认证专家，精通云原生运维。
+      自动化狂人，一切皆代码。
+    llm: "claude-3-5-sonnet-20241022"
+    tools:
+      - "pipeline_generator"
+      - "k8s_deployer"
+      - "monitoring_setup"
+    max_iter: 10
+    verbose: true
+    allow_delegation: false
+    memory_config:
+      type: "local"
+      max_tokens: 400
+
+  # ========== 质量保障层 ==========
+  - id: "qa_lead_agent"
+    role: "质量保障总监"
+    goal: "测试策略、自动化测试建设、质量门禁、缺陷管理"
+    backstory: |
+      ISTQB认证，10年测试经验。
+      擅长性能测试、安全测试和自动化建设。
+    llm: "claude-3-5-sonnet-20241022"
+    tools:
+      - "test_plan_generator"
+      - "automation_builder"
+      - "security_scanner"
+    max_iter: 10
+    verbose: true
+    allow_delegation: true
+    memory_config:
+      type: "local"
+      max_tokens: 400
+
+  - id: "qa_auto_agent"
+    role: "自动化测试专家"
+    goal: "测试框架建设、自动化脚本、CI集成"
+    backstory: |
+      精通Playwright、Jest和Cypress。
+      擅长构建高覆盖率的自动化测试。
+    llm: "claude-code"
+    tools:
+      - "test_generator"
+      - "e2e_builder"
+      - "ci_integrator"
+    max_iter: 12
+    verbose: true
+    allow_delegation: false
+    memory_config:
+      type: "local"
+      max_tokens: 400
+      focus_on_test_cases: true
+
+  # ========== 运营支持层 ==========
+  - id: "doc_agent"
+    role: "技术文档工程师"
+    goal: "API文档、架构文档、用户手册、部署文档"
+    backstory: |
+      技术写作专家，精通Markdown和文档工具。
+      擅长将复杂技术用简单语言表达。
+    llm: "claude-3-5-sonnet-20241022"
+    tools:
+      - "swagger_generator"
+      - "markdown_builder"
+      - "diagram_creator"
+    max_iter: 8
+    verbose: false
+    allow_delegation: false
+    memory_config:
+      type: "local"
+      max_tokens: 300
+
+# 最佳实践配置
+best_practices:
+  # 实践1: 明确角色职责
+  role_clarity:
+    enabled: true
+    overlap_threshold: 0.05  # 角色重复率<5%
+
+  # 实践2: 记忆本地化
+  memory_localization:
+    enabled: true
+    strategy: "per_agent"
+    avoid_global_memory: true
+
+  # 实践3: 工具权限控制
+  tool_permissions:
+    enabled: true
+    strict_mode: true
+    unauthorized_access_action: "block"
+
+  # 实践4: 终止条件
+  termination:
+    max_retries: 3
+    max_iterations: 10
+    timeout_seconds: 300
+    confidence_threshold: 0.9
+
+  # 实践5: 全面日志
+  logging:
+    level: "INFO"
+    format: "json"
+    include_fields:
+      - "agent_id"
+      - "input"
+      - "tool_used"
+      - "output"
+      - "confidence"
+      - "duration_ms"
+      - "next_action"
+
+  # 实践6: 可中断性
+  interrupt_controls:
+    pause_execution: true
+    edit_plan: true
+    rerun_agent: true
+    override_tool_input: true
+    rollback_enabled: true
+
+  # 实践7: 运行时配置
+  runtime_config:
+    configurable_at_runtime: true
+    temperature_adjustable: true
+    prompt_templates_path: "~/.claude/prompts/"
+
+  # 实践8: 版本控制
+  versioning:
+    strategy: "semantic_versioning"
+    config_hash_tracking: true
+    agents_as_apis: true
+
+# 质量标准
+quality_standards:
+  code_quality:
+    coverage_threshold: 0.85
+    duplication_max: 0.03
+    complexity_avg_max: 10
+    comment_coverage: 1.0  # 关键函数100%
+
+  test_quality:
+    unit_test_coverage: 0.85
+    integration_test_coverage: 0.70
+    e2e_critical_path: 1.0
+    defect_escape_rate_max: 0.01
+
+  performance:
+    api_response_p95_max_ms: 200
+    page_load_max_s: 3
+    memory_leak_tolerance: 0
+
+  security:
+    vulnerability_scan: "required"
+    dependency_audit: "weekly"
+    penetration_test: "pre_release"
+
+# 工作流定义
+workflows:
+  web_app_development:
+    description: "全栈Web应用开发标准流程"
+    steps:
+      - stage: "需求分析"
+        agents: ["pd_agent", "pm_agent"]
+        output: "user_stories.json"
+
+      - stage: "技术选型"
+        agents: ["cto_agent", "arch_agent"]
+        output: "tech_stack.yaml"
+
+      - stage: "架构设计"
+        agents: ["arch_agent", "sec_agent"]
+        output: "architecture.md"
+
+      - stage: "前端开发"
+        agents: ["fe_lead_agent", "fe_dev_agent", "ux_agent"]
+        output: "frontend_project/"
+
+      - stage: "后端开发"
+        agents: ["be_lead_agent", "be_dev_agent", "dba_agent"]
+        output: "backend_project/"
+
+      - stage: "测试保障"
+        agents: ["qa_lead_agent", "qa_auto_agent"]
+        output: "test_report.md"
+
+      - stage: "部署上线"
+        agents: ["devops_agent", "doc_agent"]
+        output: "deployment_success"
+
+# 监控与告警
+monitoring:
+  enabled: true
+  metrics:
+    - "agent_execution_time"
+    - "task_completion_rate"
+    - "error_rate"
+    - "tool_usage_frequency"
+  alerts:
+    - condition: "error_rate > 0.1"
+      action: "notify_cto"
+    - condition: "task_timeout"
+      action: "trigger_interrupt"
+
+# 成本优化
+cost_optimization:
+  budget_limit_monthly: 500
+  strategies:
+    - "memory_localization"  # 减少token使用
+    - "termination_conditions"  # 避免无限循环
+    - "caching_enabled"  # 缓存重复查询
+    - "model_selection"  # 简单任务用更小模型
