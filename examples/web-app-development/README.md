@@ -2,6 +2,8 @@
 
 This example demonstrates how to use the AI Multi-Agent Team to build a complete web application.
 
+**English** | **[简体中文](README.zh-CN.md)**
+
 ## Project Overview
 
 **Project**: User Management System

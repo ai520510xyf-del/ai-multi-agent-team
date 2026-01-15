@@ -2,7 +2,7 @@
 
 首先，感谢您考虑为 AI 多智能体开发团队做贡献！🎉
 
-[English](CONTRIBUTING.md) | 简体中文
+**[English](CONTRIBUTING.md)** | **简体中文**
 
 ## 行为准则
 

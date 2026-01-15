@@ -2,7 +2,7 @@
 
 本示例演示如何使用 AI 多智能体团队构建完整的 Web 应用程序。
 
-[English](README.md) | 简体中文
+**[English](README.md)** | **简体中文**
 
 ## 项目概览
 

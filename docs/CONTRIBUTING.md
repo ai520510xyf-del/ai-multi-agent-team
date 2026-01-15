@@ -2,6 +2,8 @@
 
 First off, thank you for considering contributing to AI Multi-Agent Development Team! 🎉
 
+**English** | **[简体中文](CONTRIBUTING.zh-CN.md)**
+
 ## Code of Conduct
 
 This project and everyone participating in it is governed by our Code of Conduct. By participating, you are expected to uphold this code.
